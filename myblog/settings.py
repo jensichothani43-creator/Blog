@@ -32,9 +32,13 @@ DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = os.environ.get(
     'DJANGO_ALLOWED_HOSTS',
-    '127.0.0.1,localhost,192.168.144.117'
+    '127.0.0.1,localhost,192.168.144.117,blog-ak8g.onrender.com'
 ).split(',')
 
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://blog-ak8g.onrender.com',
+]
 
 # Application definition
 INSTALLED_APPS = [
