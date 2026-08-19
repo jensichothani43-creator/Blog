@@ -138,41 +138,88 @@ Home - MyBlog
             Search
         </button>
 
-    </form>
+    </form>  
 
+<div class="posts">
 
-    <!-- POSTS -->
-    <div class="posts">
-     
-        {% for post in page_obj %}
+    {% for post in page_obj %}
 
-            <article class="post-card">
+        <article class="post-card">
 
-                <!-- IMAGE -->
-                <div class="post-image">
+            <div class="post-image">
 
-                    {% if post.image %}
+                {% if post.image %}
+                    <img
+                        src="{{ post.image.url }}"
+                        alt="{{ post.title }}"
+                    >
+                {% else %}
+                    <div class="no-image">
+                        <span>📝</span>
+                    </div>
+                {% endif %}
 
-                        <img
-                            src="{{ post.image.url }}"
-                            alt="{{ post.title }}"
-                        >
+                {% if post.category %}
+                    <span class="category-badge">
+                        {{ post.category.name }}
+                    </span>
+                {% endif %}
 
-                    {% else %}
+            </div>
 
-                        <div class="no-image">
-                            <span>📝</span>
-                        </div>
+            <div class="post-content">
 
-                    {% endif %}
+                <div class="post-meta">
+                    <span>
+                        By {{ post.author.username }}
+                    </span>
 
-                    {% if post.category %}
-                        <span class="category-badge">
-                            {{ post.category.name }}
-                        </span>
-                    {% endif %}
+                    <span>•</span>
 
+                    <span>
+                        {{ post.created_at|date:"M d, Y" }}
+                    </span>
                 </div>
+
+                <h2>
+                    <a href="{% url 'post_detail' post.slug %}">
+                        {{ post.title }}
+                    </a>
+                </h2>
+
+                <p class="excerpt">
+                    {{ post.content|striptags|truncatewords:30 }}
+                </p>
+
+                <a
+                    href="{% url 'post_detail' post.slug %}"
+                    class="read-more"
+                >
+                    Read Article
+                    <span>→</span>
+                </a>
+
+            </div>
+
+        </article>
+
+    {% empty %}
+
+        <div class="empty-state">
+
+            <div class="empty-icon">📝</div>
+
+            <h2>No posts found</h2>
+
+            <p>
+                No approved posts are available.
+            </p>
+
+        </div>
+
+    {% endfor %}
+
+</div>
 
 
                 <!-- CONTENT -->

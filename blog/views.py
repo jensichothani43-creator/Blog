@@ -74,13 +74,12 @@ def post_detail(request, slug):
     """
 
     post = get_object_or_404(
-        Post.objects.select_related(
-            "author",
-            "category",
-        ),
-        slug=slug,
-        status="approved",
-    )
+    Post.objects.select_related(
+        "author",
+        "category",
+    ),
+    slug=slug,
+)
 
     # Comments
     comments = (
@@ -164,7 +163,7 @@ def create_post(request):
             post.author = request.user
 
             # New posts wait for admin approval
-            post.status = "pending"
+            post.status = "approved"
 
             post.save()
 
