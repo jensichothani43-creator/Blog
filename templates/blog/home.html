@@ -217,62 +217,6 @@ Home - MyBlog
 
         </div>
 
-    {% endfor %}
-
-</div>
-
-
-                <!-- CONTENT -->
-                <div class="post-content">
-
-                    <div class="post-meta">
-
-                        <span>
-                            By {{ post.author.username }}
-                        </span>
-
-                        <span>•</span>
-
-                        <span>
-                            {{ post.created_at|date:"M d, Y" }}
-                        </span>
-
-                    </div>
-
-
-                    <h2>
-
-                        <a
-                            href="{% url 'post_detail' post.slug %}"
-                        >
-                            {{ post.title }}
-                        </a>
-
-                    </h2>
-
-
-                    <p class="excerpt">
-                        {{ post.content|truncatewords:30 }}
-                    </p>
-
-
-                    <a
-                        href="{% url 'post_detail' post.slug %}"
-                        class="read-more"
-                    >
-                        Read Article
-                        <span>→</span>
-                    </a>
-
-                </div>
-
-            </article>
-
-
-        {% empty %}
-
-            <div class="empty-state">
-
                 <div class="empty-icon">
                     📝
                 </div>

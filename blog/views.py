@@ -30,10 +30,12 @@ def home(request):
 
     posts = (
     Post.objects
-    .filter(status="approved")
+    .all()
     .select_related("author", "category")
 )
 
+    # Search
+    # Search
     # Search
     if query:
         posts = posts.filter(
