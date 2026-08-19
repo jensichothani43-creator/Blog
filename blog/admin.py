@@ -1,62 +1,31 @@
-from django.contrib import admin
-
-from .models import Category, Comment, Like, Post
-
-
-
-@admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ["name", "slug"]
-    prepopulated_fields = {
-        "slug": ("name",)
-    }
+import os
+from django.core.management.base import BaseCommand
+from django.contrib.auth import get_user_model
 
 
-@admin.register(Post)
-class PostAdmin(admin.ModelAdmin):
-    list_display = [
-        "title",
-        "author",
-        "category",
-        "status",
-        "created_at",
-    ]
+class Command(BaseCommand):
+    help = "Create a superuser from environment variables if it doesn't already exist"
 
-    list_filter = [
-        "status",
-        "category",
-        "created_at",
-    ]
+    def handle(self, *args, **options):
+        User = get_user_model()
 
-    search_fields = [
-        "title",
-        "content",
-        "author__username",
-    ]
+        username = os.environ.get("DJANGO_SUPERUSER_USERNAME")
+        email = os.environ.get("DJANGO_SUPERUSER_EMAIL", "")
+        password = os.environ.get("DJANGO_SUPERUSER_PASSWORD")
 
-    prepopulated_fields = {
-        "slug": ("title",)
-    }
+        if not username or not password:
+            self.stdout.write(self.style.WARNING(
+                "DJANGO_SUPERUSER_USERNAME or DJANGO_SUPERUSER_PASSWORD not set. Skipping."
+            ))
+            return
 
+        if User.objects.filter(username=username).exists():
+            self.stdout.write(self.style.WARNING(
+                f"User '{username}' already exists. Skipping."
+            ))
+            return
 
-@admin.register(Comment)
-class CommentAdmin(admin.ModelAdmin):
-    list_display = [
-        "author",
-        "post",
-        "created_at",
-    ]
-
-    search_fields = [
-        "content",
-        "author__username",
-    ]
-
-
-@admin.register(Like)
-class LikeAdmin(admin.ModelAdmin):
-    list_display = [
-        "user",
-        "post",
-        "created_at",
-    ]
+        User.objects.create_superuser(username=username, email=email, password=password)
+        self.stdout.write(self.style.SUCCESS(
+            f"Superuser '{username}' created successfully."
+        ))
