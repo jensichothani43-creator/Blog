@@ -1,0 +1,41 @@
+{% for like in likes %}
+
+    <article class="post-card">
+
+        <h2>
+            <a href="{% url 'post_detail' like.post.slug %}">
+                {{ like.post.title }}
+            </a>
+        </h2>
+
+        <p>
+            ❤️ Liked by:
+            <strong>{{ like.user.username }}</strong>
+        </p>
+
+        <p>
+            Post by:
+            <strong>{{ like.post.author.username }}</strong>
+        </p>
+
+        {% if like.post.category %}
+            <p>
+                Category: {{ like.post.category.name }}
+            </p>
+        {% endif %}
+
+        <p>
+            {{ like.post.content|truncatewords:30 }}
+        </p>
+
+        <a href="{% url 'post_detail' like.post.slug %}">
+            Read More →
+        </a>
+
+    </article>
+
+{% empty %}
+
+    <p>No liked posts yet.</p>
+
+{% endfor %}

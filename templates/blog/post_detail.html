@@ -1,0 +1,289 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ post.title }} - MyBlog
+{% endblock %}
+
+
+{% block content %}
+
+<article class="post-detail">
+
+    <h1>
+        {{ post.title }}
+    </h1>
+
+
+    <p class="meta">
+
+        By {{ post.author.username }}
+
+        {% if post.category %}
+            | {{ post.category.name }}
+        {% endif %}
+
+        | {{ post.created_at|date:"M d, Y" }}
+
+    </p>
+
+
+    {% if post.image %}
+
+        <img
+            src="{{ post.image.url }}"
+            class="detail-image"
+            alt="{{ post.title }}"
+        >
+
+    {% endif %}
+
+
+    <div class="post-body">
+
+        {{ post.content|linebreaks }}
+
+    </div>
+
+
+    {% if user == post.author %}
+
+        <div class="actions">
+
+            <a
+                href="{% url 'update_post' post.pk %}"
+            >
+                Edit
+            </a>
+
+            <a
+                href="{% url 'delete_post' post.pk %}"
+            >
+                Delete
+            </a>
+
+        </div>
+
+    {% endif %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.querySelector(".like-form");
+    const button = document.querySelector(".like-button");
+
+    if (!form || !button) return;
+
+    form.addEventListener("submit", async function (event) {
+
+        event.preventDefault();
+
+        const csrfToken = form.querySelector(
+            "[name=csrfmiddlewaretoken]"
+        ).value;
+
+        const response = await fetch(form.action, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrfToken,
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        });
+
+        const data = await response.json();
+
+        const icon = button.querySelector(".like-icon");
+        const count = button.querySelector(".like-count");
+
+        if (data.liked) {
+            button.classList.add("liked");
+            icon.textContent = "❤️";
+        } else {
+            button.classList.remove("liked");
+            icon.textContent = "♡";
+        }
+
+        count.textContent = data.count;
+    });
+
+});
+</script>
+<script>
+function toggleReply(commentId) {
+
+    const form = document.getElementById(
+        "reply-form-" + commentId
+    );
+
+    if (!form) return;
+
+    if (form.style.display === "none") {
+        form.style.display = "block";
+    } else {
+        form.style.display = "none";
+    }
+}
+</script>
+
+
+    <hr>
+
+
+    <h2>
+        Comments
+    </h2>
+{% for comment in comments %}
+
+    <div class="comment">
+
+        <strong>
+            {{ comment.author.username }}
+        </strong>
+
+        <p>
+            {{ comment.content }}
+        </p>
+
+        {% if user.is_authenticated %}
+
+            <div class="comment-actions">
+
+                <button
+                    type="button"
+                    class="reply-toggle"
+                    onclick="toggleReply({{ comment.pk }})"
+                >
+                    <i class="fa-regular fa-comment"></i>
+                    Reply
+                </button>
+
+            </div>
+
+
+            <form
+                method="post"
+                action="{% url 'reply_comment' comment.pk %}"
+                class="reply-form"
+                id="reply-form-{{ comment.pk }}"
+                style="display: none;"
+            >
+
+                {% csrf_token %}
+
+                <textarea
+                    name="content"
+                    placeholder="Write a reply..."
+                    required
+                ></textarea>
+
+                <button type="submit">
+                    Post Reply
+                </button>
+
+            </form>
+
+        {% endif %}
+
+
+        <!-- Replies -->
+
+        {% for reply in comment.replies.all %}
+
+            <div class="reply">
+
+                <strong>
+                    {{ reply.author.username }}
+                </strong>
+
+                <p>
+                    {{ reply.content }}
+                </p>
+
+                {% if user.is_authenticated %}
+
+                    <button
+                        type="button"
+                        class="reply-toggle"
+                        onclick="toggleReply({{ reply.pk }})"
+                    >
+                        <i class="fa-regular fa-comment"></i>
+                        Reply
+                    </button>
+
+                {% endif %}
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% empty %}
+
+    <p>No comments yet.</p>
+
+{% endfor %}
+
+    {% if user.is_authenticated %}
+
+        <h3>
+            Add Comment
+        </h3>
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            {{ comment_form.as_p }}
+
+            <button type="submit">
+                Add Comment
+            </button>
+
+        </form>
+        <!-- LIKE -->
+{% if user.is_authenticated %}
+
+<form
+    method="post"
+    action="{% url 'like_post' post.pk %}"
+    class="like-form"
+>
+    {% csrf_token %}
+
+    <button
+        type="submit"
+        class="like-button {% if liked %}liked{% endif %}"
+    >
+        <span class="like-icon">
+            {% if liked %}❤️{% else %}♡{% endif %}
+        </span>
+
+        <span class="like-count">
+            {{ post.likes.count }}
+        </span>
+    </button>
+</form>
+
+{% else %}
+
+<p class="login-like">
+    <a href="{% url 'login' %}">Login</a>
+    to like this post.
+</p>
+
+{% endif %}
+
+    {% else %}
+
+        <p>
+            Please
+            <a href="{% url 'login' %}">
+                login
+            </a>
+            to comment.
+        </p>
+
+    {% endif %}
+
+</article>
+
+{% endblock %}

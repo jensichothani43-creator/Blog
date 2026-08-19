@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ author.username }} - Posts
+{% endblock %}
+
+{% block content %}
+
+<div class="profile-posts">
+
+    <h1>{{ author.username }}'s Posts</h1>
+
+    {% if posts %}
+
+        {% for post in posts %}
+
+            <article class="post-card">
+
+                {% if post.image %}
+                    <img
+                        src="{{ post.image.url }}"
+                        alt="{{ post.title }}"
+                        class="post-image"
+                    >
+                {% endif %}
+
+                <h2>
+                    <a href="{% url 'post_detail' post.slug %}">
+                        {{ post.title }}
+                    </a>
+                </h2>
+
+                <p>
+                    {{ post.content|truncatewords:30 }}
+                </p>
+
+                <div class="post-meta">
+                    By {{ post.author.username }}
+                    |
+                    {{ post.created_at|date:"M d, Y" }}
+                </div>
+
+                <a href="{% url 'post_detail' post.slug %}">
+                    Read More →
+                </a>
+
+            </article>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="no-posts">
+            <h3>No published posts yet.</h3>
+            <p>{{ author.username }} hasn't published any posts.</p>
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

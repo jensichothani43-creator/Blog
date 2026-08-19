@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ title }} - MyBlog
+{% endblock %}
+
+{% block content %}
+
+<div class="editor-page">
+
+    <!-- HEADER -->
+    <div class="editor-header">
+
+        <div class="editor-label">
+            MYBLOG EDITOR
+        </div>
+
+        <h1>{{ title }}</h1>
+
+        <p>
+            {% if title == "Update Post" %}
+                Update your article and keep your content fresh.
+            {% else %}
+                Create something valuable and share it with the world.
+            {% endif %}
+        </p>
+
+    </div>
+
+
+    <!-- FORM -->
+    <form
+        method="post"
+        enctype="multipart/form-data"
+        class="editor-card"
+    >
+
+        {% csrf_token %}
+
+
+      {% if form.errors %}
+
+    <div class="form-error">
+
+        <strong>
+            Please correct the errors below.
+        </strong>
+
+        <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>
+                        {{ field.label }}: {{ error }}
+                    </li>
+                {% endfor %}
+            {% endfor %}
+
+            {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+
+    </div>
+
+{% endif %}
+
+
+        <!-- TITLE -->
+        <div class="field">
+
+            <label for="{{ form.title.id_for_label }}">
+                Title
+            </label>
+
+            {{ form.title }}
+
+            {% for error in form.title.errors %}
+                <small class="error">
+                    {{ error }}
+                </small>
+            {% endfor %}
+
+        </div>
+
+
+        <!-- SLUG -->
+        <div class="field">
+
+            <label for="{{ form.slug.id_for_label }}">
+                Slug
+            </label>
+
+            {{ form.slug }}
+
+            <small class="field-help">
+                Example: my-first-django-post
+            </small>
+
+            {% for error in form.slug.errors %}
+                <small class="error">
+                    {{ error }}
+                </small>
+            {% endfor %}
+
+        </div>
+
+
+        <!-- CATEGORY -->
+        <div class="field">
+
+            <label for="{{ form.category.id_for_label }}">
+                Category
+            </label>
+
+            {{ form.category }}
+
+            {% for error in form.category.errors %}
+                <small class="error">
+                    {{ error }}
+                </small>
+            {% endfor %}
+
+        </div>
+
+
+        <!-- CONTENT -->
+        <div class="field">
+
+            <div class="label-row">
+
+                <label for="{{ form.content.id_for_label }}">
+                    Content
+                </label>
+
+                <span>
+                    Write your article
+                </span>
+
+            </div>
+
+            {{ form.content }}
+
+            {% for error in form.content.errors %}
+                <small class="error">
+                    {{ error }}
+                </small>
+            {% endfor %}
+
+        </div>
+
+
+        <!-- IMAGE -->
+        <div class="field">
+
+            <label>
+                Featured Image
+            </label>
+
+
+            {% if form.instance.image %}
+
+                <div class="existing-image">
+
+                    <div class="existing-image-title">
+                        Current Image
+                    </div>
+
+                    <div class="image-preview">
+
+                        <img
+                            src="{{ form.instance.image.url }}"
+                            alt="{{ form.instance.title }}"
+                        >
+
+                    </div>
+
+                    <a
+                        href="{{ form.instance.image.url }}"
+                        target="_blank"
+                        class="image-file"
+                    >
+                        📷 {{ form.instance.image.name }}
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+
+            <div class="upload-area">
+
+                <div class="upload-symbol">
+                    +
+                </div>
+
+                <div class="upload-info">
+
+                    <strong>
+                        Change image
+                    </strong>
+
+                    <span>
+                        JPG, PNG or WEBP recommended
+                    </span>
+
+                </div>
+
+                {{ form.image }}
+
+            </div>
+
+
+            {% for error in form.image.errors %}
+                <small class="error">
+                    {{ error }}
+                </small>
+            {% endfor %}
+
+        </div>
+
+
+        <!-- ACTIONS -->
+        <div class="editor-actions">
+
+            <a
+                href="{% url 'home' %}"
+                class="btn-cancel"
+            >
+                Cancel
+            </a>
+
+            <button
+                type="submit"
+                class="btn-save"
+            >
+
+                {% if title == "Update Post" %}
+                    Update Post
+                {% else %}
+                    Create Post
+                {% endif %}
+
+                <span>→</span>
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,423 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ author.username }} - Profile
+{% endblock %}
+
+{% block content %}
+
+<style>
+    .profile-wrapper {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .profile-card {
+        background: #ffffff;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+        margin-bottom: 35px;
+    }
+
+    .profile-cover {
+        height: 180px;
+        background: linear-gradient(
+            135deg,
+            #111827,
+            #374151
+        );
+    }
+
+    .profile-main {
+        padding: 0 40px 35px;
+        position: relative;
+    }
+
+    .profile-photo {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 6px solid #ffffff;
+        margin-top: -70px;
+        position: relative;
+        background: #e5e7eb;
+    }
+
+    .profile-placeholder {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        border: 6px solid #ffffff;
+        margin-top: -70px;
+        background: #111827;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 55px;
+        font-weight: bold;
+    }
+
+    .profile-name {
+        margin: 15px 0 4px;
+        font-size: 32px;
+        color: #111827;
+    }
+
+    .profile-username {
+        color: #6b7280;
+        font-size: 15px;
+    }
+
+    .profile-bio {
+        max-width: 650px;
+        margin: 18px 0;
+        color: #4b5563;
+        line-height: 1.7;
+        font-size: 16px;
+    }
+
+    .profile-meta {
+        display: flex;
+        gap: 25px;
+        color: #6b7280;
+        font-size: 14px;
+        margin-bottom: 25px;
+    }
+
+    .profile-stats {
+        display: flex;
+        gap: 15px;
+        margin-top: 25px;
+    }
+
+    .stat {
+    min-width: 130px;
+    padding: 18px;
+    text-align: center;
+    background: #f9fafb;
+    border-radius: 12px;
+
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.stat:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+    .stat-number {
+        display: block;
+        font-size: 24px;
+        font-weight: bold;
+        color: #111827;
+    }
+
+    .stat-label {
+        display: block;
+        margin-top: 5px;
+        font-size: 12px;
+        color: #6b7280;
+        text-transform: uppercase;
+    }
+
+    .section-title {
+        font-size: 26px;
+        margin-bottom: 20px;
+        color: #111827;
+    }
+
+    .post-card {
+        display: flex;
+        gap: 22px;
+        background: #ffffff;
+        padding: 20px;
+        margin-bottom: 18px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+        transition: transform 0.2s ease;
+    }
+
+    .post-card:hover {
+        transform: translateY(-3px);
+    }
+
+    .post-image {
+        width: 220px;
+        height: 145px;
+        object-fit: cover;
+        border-radius: 12px;
+        flex-shrink: 0;
+    }
+
+    .post-info {
+        flex: 1;
+    }
+
+    .post-title {
+        margin: 0 0 8px;
+        font-size: 21px;
+    }
+
+    .post-title a {
+        text-decoration: none;
+        color: #111827;
+    }
+
+    .post-title a:hover {
+        color: #2563eb;
+    }
+
+    .post-date {
+        color: #9ca3af;
+        font-size: 13px;
+    }
+
+    .post-description {
+        color: #4b5563;
+        line-height: 1.6;
+        margin-top: 12px;
+    }
+
+    .empty-posts {
+        padding: 40px;
+        background: #ffffff;
+        border-radius: 15px;
+        text-align: center;
+        color: #6b7280;
+    }
+
+    @media (max-width: 700px) {
+
+        .profile-main {
+            padding: 0 20px 25px;
+        }
+
+        .profile-stats {
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            flex: 1;
+            min-width: 100px;
+        }
+
+        .profile-meta {
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .post-card {
+            flex-direction: column;
+        }
+
+        .post-image {
+            width: 100%;
+            height: 200px;
+        }
+    }
+</style>
+
+
+<div class="profile-wrapper">
+
+    <!-- PROFILE CARD -->
+    <section class="profile-card">
+
+        <div class="profile-cover"></div>
+
+        <div class="profile-main">
+
+            <!-- PROFILE PHOTO -->
+
+            {% if profile and profile.image %}
+
+                <img
+                    src="{{ profile.image.url }}"
+                    alt="{{ author.username }}"
+                    class="profile-photo"
+                >
+
+            {% else %}
+
+                <div class="profile-placeholder">
+                    {{ author.username|first|upper }}
+                </div>
+
+            {% endif %}
+
+
+            <!-- NAME -->
+
+            <h1 class="profile-name">
+                {{ author.get_full_name|default:author.username }}
+            </h1>
+
+            <div class="profile-username">
+                @{{ author.username }}
+            </div>
+
+
+            <!-- BIO -->
+
+            {% if profile and profile.bio %}
+
+                <p class="profile-bio">
+                    {{ profile.bio }}
+                </p>
+
+            {% else %}
+
+                <p class="profile-bio">
+                    Welcome to my blog profile.
+                </p>
+
+            {% endif %}
+
+
+            <!-- META -->
+
+            <div class="profile-meta">
+
+                <span>
+                    📅 Joined {{ author.date_joined|date:"F Y" }}
+                </span>
+
+                {% if profile and profile.location %}
+                    <span>
+                        📍 {{ profile.location }}
+                    </span>
+                {% endif %}
+
+            </div>
+
+<!-- STATISTICS -->
+<div class="profile-stats">
+
+    <a
+        href="{% url 'profile_posts' author.username %}"
+        class="stat"
+    >
+        <span class="stat-number">
+            {{ posts|length }}
+        </span>
+
+        <span class="stat-label">
+            Posts
+        </span>
+    </a>
+
+
+    <a
+        href="{% url 'profile_likes' author.username %}"
+        class="stat"
+    >
+        <span class="stat-number">
+            {{ total_likes }}
+        </span>
+
+        <span class="stat-label">
+            Likes
+        </span>
+    </a>
+
+
+    <a
+        href="{% url 'profile_comments' author.username %}"
+        class="stat"
+    >
+        <span class="stat-number">
+            {{ total_comments }}
+        </span>
+
+        <span class="stat-label">
+            Comments
+        </span>
+    </a>
+
+</div>
+
+
+    <!-- POSTS -->
+
+    <h2 class="section-title">
+        Latest Posts
+    </h2>
+
+
+    {% if posts %}
+
+        {% for post in posts %}
+
+            <article class="post-card">
+
+                {% if post.image %}
+
+                    <img
+                        src="{{ post.image.url }}"
+                        alt="{{ post.title }}"
+                        class="post-image"
+                    >
+
+                {% endif %}
+
+
+                <div class="post-info">
+
+                    <h3 class="post-title">
+
+                        <a href="{{ post.get_absolute_url }}">
+                            {{ post.title }}
+                        </a>
+
+                    </h3>
+
+
+                    <div class="post-date">
+                        {{ post.created_at|date:"F d, Y" }}
+                    </div>
+
+
+                    {% if post.category %}
+
+                        <div class="post-date">
+                            Category: {{ post.category.name }}
+                        </div>
+
+                    {% endif %}
+
+
+                    <p class="post-description">
+                        {{ post.content|truncatewords:30 }}
+                    </p>
+
+                </div>
+
+            </article>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="empty-posts">
+            <h3>No published posts yet.</h3>
+
+            <p>
+                This author hasn't published any posts.
+            </p>
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

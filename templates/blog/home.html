@@ -1,0 +1,397 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+Home - MyBlog
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO SECTION (SLIDER) -->
+<section class="hero">
+
+    <div class="hero-slide hero-slide-1 active">
+        <div class="hero-content">
+
+            <span class="hero-badge">
+                ✨ Welcome to MyBlog
+            </span>
+
+            <h1>
+                Discover Stories,<br>
+                Ideas & Knowledge
+            </h1>
+
+            <p>
+                Explore insightful articles, tutorials and stories
+                written by passionate creators.
+            </p>
+
+            <a href="#latest-posts" class="hero-btn">
+                Explore Articles →
+            </a>
+
+        </div>
+    </div>
+
+    <div class="hero-slide hero-slide-2">
+        <div class="hero-content">
+
+            <span class="hero-badge">
+                📝 Write Your Own Story
+            </span>
+
+            <h1>
+                Share Your Voice<br>
+                With The World
+            </h1>
+
+            <p>
+                Create posts, add images, and let your ideas
+                reach readers everywhere.
+            </p>
+
+            <a href="{% url 'create_post' %}" class="hero-btn">
+                Create Post →
+            </a>
+
+        </div>
+    </div>
+
+    <div class="hero-slide hero-slide-3">
+        <div class="hero-content">
+
+            <span class="hero-badge">
+                💬 Join The Conversation
+            </span>
+
+            <h1>
+                Comment, Like<br>
+                & Connect
+            </h1>
+
+            <p>
+                Engage with articles through comments and likes,
+                and connect with other passionate readers.
+            </p>
+
+            <a href="#latest-posts" class="hero-btn">
+                Start Exploring →
+            </a>
+
+        </div>
+    </div>
+
+    <!-- ARROWS -->
+    <button class="hero-arrow hero-arrow-left" id="heroPrev" aria-label="Previous slide">‹</button>
+    <button class="hero-arrow hero-arrow-right" id="heroNext" aria-label="Next slide">›</button>
+
+    <!-- DOTS -->
+    <div class="hero-dots">
+        <span class="hero-dot active" data-slide="0"></span>
+        <span class="hero-dot" data-slide="1"></span>
+        <span class="hero-dot" data-slide="2"></span>
+    </div>
+
+</section>
+
+
+<!-- LATEST POSTS -->
+<section class="latest-section" id="latest-posts">
+
+    <div class="section-header">
+
+        <div>
+            <span class="section-label">
+                OUR BLOG
+            </span>
+
+            <h2>
+                Latest Articles
+            </h2>
+
+            <p>
+                Fresh ideas and stories from our community.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- SEARCH -->
+    <form method="get" class="search">
+
+        <div class="search-box">
+
+            <span class="search-icon">🔍</span>
+
+            <input
+                type="text"
+                name="q"
+                placeholder="Search articles..."
+                value="{{ query }}"
+            >
+
+        </div>
+
+        <button type="submit">
+            Search
+        </button>
+
+    </form>
+
+
+    <!-- POSTS -->
+    <div class="posts">
+
+        {% for post in page_obj %}
+
+            <article class="post-card">
+
+                <!-- IMAGE -->
+                <div class="post-image">
+
+                    {% if post.image %}
+
+                        <img
+                            src="{{ post.image.url }}"
+                            alt="{{ post.title }}"
+                        >
+
+                    {% else %}
+
+                        <div class="no-image">
+                            <span>📝</span>
+                        </div>
+
+                    {% endif %}
+
+                    {% if post.category %}
+                        <span class="category-badge">
+                            {{ post.category.name }}
+                        </span>
+                    {% endif %}
+
+                </div>
+
+
+                <!-- CONTENT -->
+                <div class="post-content">
+
+                    <div class="post-meta">
+
+                        <span>
+                            By {{ post.author.username }}
+                        </span>
+
+                        <span>•</span>
+
+                        <span>
+                            {{ post.created_at|date:"M d, Y" }}
+                        </span>
+
+                    </div>
+
+
+                    <h2>
+
+                        <a
+                            href="{% url 'post_detail' post.slug %}"
+                        >
+                            {{ post.title }}
+                        </a>
+
+                    </h2>
+
+
+                    <p class="excerpt">
+                        {{ post.content|truncatewords:30 }}
+                    </p>
+
+
+                    <a
+                        href="{% url 'post_detail' post.slug %}"
+                        class="read-more"
+                    >
+                        Read Article
+                        <span>→</span>
+                    </a>
+
+                </div>
+
+            </article>
+
+
+        {% empty %}
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    📝
+                </div>
+
+                <h2>
+                    No posts found
+                </h2>
+
+                <p>
+                    Try searching for something else.
+                </p>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+
+    <!-- PAGINATION -->
+    {% if page_obj.paginator.num_pages > 1 %}
+
+        <div class="pagination">
+
+            {% if page_obj.has_previous %}
+
+                <a
+                    class="page-btn"
+                    href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}"
+                >
+                    ← Previous
+                </a>
+
+            {% endif %}
+
+
+            <span class="page-info">
+
+                Page
+                <strong>{{ page_obj.number }}</strong>
+                of
+                <strong>{{ page_obj.paginator.num_pages }}</strong>
+
+            </span>
+
+
+            {% if page_obj.has_next %}
+
+                <a
+                    class="page-btn"
+                    href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}"
+                >
+                    Next →
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    {% endif %}
+
+</section>
+
+
+<!-- CTA -->
+<section class="newsletter">
+
+    <div>
+
+        <span class="section-label">
+            STAY CONNECTED
+        </span>
+
+        <h2>
+            Never miss a story.
+        </h2>
+
+        <p>
+            Discover new articles and ideas every week.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- HERO SLIDER SCRIPT -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const heroSection = document.querySelector(".hero");
+    const slides = document.querySelectorAll(".hero-slide");
+    const dots = document.querySelectorAll(".hero-dot");
+    const prevBtn = document.getElementById("heroPrev");
+    const nextBtn = document.getElementById("heroNext");
+
+    let current = 0;
+    let timer;
+
+    function showSlide(index) {
+        if (index >= slides.length) index = 0;
+        if (index < 0) index = slides.length - 1;
+
+        slides.forEach(function (slide) {
+            slide.classList.remove("active");
+        });
+        dots.forEach(function (dot) {
+            dot.classList.remove("active");
+        });
+
+        slides[index].classList.add("active");
+        dots[index].classList.add("active");
+        current = index;
+
+        heroSection.classList.remove("bg-slide-1", "bg-slide-2", "bg-slide-3");
+        heroSection.classList.add("bg-slide-" + (index + 1));
+
+        heroSection.classList.add("hero-zoom");
+        setTimeout(function () {
+            heroSection.classList.remove("hero-zoom");
+        }, 500);
+    }
+
+    function nextSlide() {
+        showSlide(current + 1);
+    }
+
+    function prevSlide() {
+        showSlide(current - 1);
+    }
+
+    function startAutoSlide() {
+        timer = setInterval(nextSlide, 4500);
+    }
+
+    function resetAutoSlide() {
+        clearInterval(timer);
+        startAutoSlide();
+    }
+
+    dots.forEach(function (dot) {
+        dot.addEventListener("click", function () {
+            showSlide(parseInt(dot.getAttribute("data-slide")));
+            resetAutoSlide();
+        });
+    });
+
+    if (nextBtn) {
+        nextBtn.addEventListener("click", function () {
+            nextSlide();
+            resetAutoSlide();
+        });
+    }
+
+    if (prevBtn) {
+        prevBtn.addEventListener("click", function () {
+            prevSlide();
+            resetAutoSlide();
+        });
+    }
+
+    heroSection.classList.add("bg-slide-1");
+
+    if (slides.length > 1) {
+        startAutoSlide();
+    }
+});
+</script>
+
+{% endblock %}

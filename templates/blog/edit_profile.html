@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit Profile - MyBlog
+{% endblock %}
+
+{% block content %}
+
+<style>
+    .edit-profile-wrapper {
+        max-width: 500px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .edit-profile-card {
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 35px;
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+    }
+
+    .edit-profile-card h2 {
+        margin-bottom: 25px;
+    }
+
+    .edit-profile-card label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 6px;
+        margin-top: 18px;
+    }
+
+    .edit-profile-card input,
+    .edit-profile-card textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        font-size: 14px;
+    }
+
+    .edit-profile-card button {
+        margin-top: 25px;
+        background: #111827;
+        color: #ffffff;
+        border: none;
+        padding: 12px 22px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    .edit-profile-card button:hover {
+        opacity: 0.9;
+    }
+</style>
+
+<div class="edit-profile-wrapper">
+
+    <div class="edit-profile-card">
+
+        <h2>Edit Profile</h2>
+
+        <form method="post" enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button type="submit">
+                Save Changes
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}
