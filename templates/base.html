@@ -12,7 +12,9 @@
 <body>
 
     <header class="navbar">
-        <a href="{% url 'home' %}" class="logo">MyBlog</a>
+        <a href="/" class="logo">
+    <img src="{% static 'images/logo.png' %}" alt="MyBlog" style="height: 40px;">
+</a>
 
         <nav>
             <a href="{% url 'home' %}">Home</a>
