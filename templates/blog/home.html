@@ -139,27 +139,31 @@ Home - MyBlog
     {% for post in page_obj %}
 
         <article class="post-card">
+<div class="post-image">
 
-            <div class="post-image">
+    {% if post.image %}
+        <!-- અહીં <a target="_blank"> ઉમેર્યું છે જેથી નવી ટેબમાં ખુલે -->
+        <a href="{{ post.image.url }}" target="_blank">
+            <img
+                src="{{ post.image.url }}"
+                alt="{{ post.title }}"
+            >
+        </a>
+    {% else %}
+        <div class="no-image">
+            <span>📝</span>
+        </div>
+    {% endif %}
 
-                {% if post.image %}
-                    <img
-                        src="{{ post.image.url }}"
-                        alt="{{ post.title }}"
-                    >
-                {% else %}
-                    <div class="no-image">
-                        <span>📝</span>
-                    </div>
-                {% endif %}
+    {% if post.category %}
+        <span class="category-badge">
+            {{ post.category.name }}
+        </span>
+    {% endif %}
 
-                {% if post.category %}
-                    <span class="category-badge">
-                        {{ post.category.name }}
-                    </span>
-                {% endif %}
+</div>
+          
 
-            </div>
 
             <div class="post-content">
 

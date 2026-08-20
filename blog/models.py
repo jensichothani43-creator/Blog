@@ -26,6 +26,7 @@ class Post(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name="posts",
+        
     )
 
     category = models.ForeignKey(
@@ -61,6 +62,7 @@ class Post(models.Model):
         blank=True,
         null=True,
     )
+    
 
     created_at = models.DateTimeField(
         auto_now_add=True,
