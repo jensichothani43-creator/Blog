@@ -1875,3 +1875,30 @@ footer {
         background-position: 0% 50%;
     }
 }
+
+.category-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 20px 0 30px;
+}
+
+.category-chip {
+    padding: 8px 18px;
+    border-radius: 999px;
+    background: #f3f4f6;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+.category-chip:hover {
+    background: #e5e7eb;
+}
+
+.category-chip.active {
+    background: #111827;
+    color: white;
+}

@@ -27,6 +27,7 @@ def home(request):
     """
 
     query = request.GET.get("q", "").strip()
+    selected_category = request.GET.get("category", "").strip()
 
     posts = (
     Post.objects
@@ -35,13 +36,15 @@ def home(request):
 )
 
     # Search
-    # Search
-    # Search
     if query:
         posts = posts.filter(
             Q(title__icontains=query)
             | Q(content__icontains=query)
         )
+
+    # Category filter
+    if selected_category:
+        posts = posts.filter(category__id=selected_category)
 
     # Pagination
     paginator = Paginator(posts, 6)
@@ -60,6 +63,7 @@ def home(request):
             "page_obj": page_obj,
             "categories": categories,
             "query": query,
+            "selected_category": selected_category,
         },
     )
 

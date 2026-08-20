@@ -134,6 +134,30 @@ Home - MyBlog
 
     </form>
 
+    {% if categories %}
+    <div class="category-filter">
+
+        
+        <a
+            href="{% if query %}?q={{ query }}{% endif %}"
+            class="category-chip {% if not selected_category %}active{% endif %}"
+        >
+            All
+        </a>
+
+        {% for cat in categories %}
+            
+            <a
+                href="?category={{ cat.id }}{% if query %}&q={{ query }}{% endif %}"
+                class="category-chip {% if selected_category == cat.id|stringformat:'s' %}active{% endif %}"
+            >
+                {{ cat.name }}
+            </a>
+        {% endfor %}
+
+    </div>
+    {% endif %}
+
 <div class="posts">
 
     {% for post in page_obj %}
