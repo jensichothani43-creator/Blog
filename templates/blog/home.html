@@ -139,7 +139,7 @@ Home - MyBlog
 
         
         <a
-            href="{% if query %}?q={{ query }}{% endif %}"
+            href="{% url 'home' %}{% if query %}?q={{ query }}{% endif %}"
             class="category-chip {% if not selected_category %}active{% endif %}"
         >
             All
