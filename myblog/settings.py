@@ -38,6 +38,7 @@ ALLOWED_HOSTS = os.environ.get(
 
 CSRF_TRUSTED_ORIGINS = [
     'https://blog-ak8g.onrender.com',
+    'http://blog-ak8g.onrender.com'
 ]
 INSTALLED_APPS = [
     'django.contrib.admin',
