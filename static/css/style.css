@@ -496,11 +496,6 @@ nav a:hover {
 }
 
 .hero-slide.active {
-    position: relative;
-    top: 0;
-    left: 0;
-    right: 0;
-
     opacity: 1;
     visibility: visible;
 
