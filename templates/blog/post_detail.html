@@ -155,6 +155,21 @@ function toggleReply(commentId) {
                     Reply
                 </button>
 
+                {% if comment.author == user or user.is_staff %}
+                    <form
+                        method="post"
+                        action="{% url 'delete_comment' comment.pk %}"
+                        style="display: inline;"
+                        onsubmit="return confirm('Delete this comment?');"
+                    >
+                        {% csrf_token %}
+                        <button type="submit" class="reply-toggle">
+                            <i class="fa-regular fa-trash-can"></i>
+                            Delete
+                        </button>
+                    </form>
+                {% endif %}
+
             </div>
 
 
@@ -207,6 +222,21 @@ function toggleReply(commentId) {
                         <i class="fa-regular fa-comment"></i>
                         Reply
                     </button>
+
+                    {% if reply.author == user or user.is_staff %}
+                        <form
+                            method="post"
+                            action="{% url 'delete_comment' reply.pk %}"
+                            style="display: inline;"
+                            onsubmit="return confirm('Delete this reply?');"
+                        >
+                            {% csrf_token %}
+                            <button type="submit" class="reply-toggle">
+                                <i class="fa-regular fa-trash-can"></i>
+                                Delete
+                            </button>
+                        </form>
+                    {% endif %}
 
                 {% endif %}
 

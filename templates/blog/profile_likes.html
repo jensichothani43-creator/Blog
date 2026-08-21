@@ -1,3 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ author.username }} - Liked Posts
+{% endblock %}
+
+{% block content %}
+
+<div class="profile-posts">
+
+    <h1>{{ author.username }}'s Liked Posts</h1>
+
 {% for like in likes %}
 
     <article class="post-card">
@@ -39,3 +51,30 @@
     <p>No liked posts yet.</p>
 
 {% endfor %}
+
+    {% if page_obj.paginator.num_pages > 1 %}
+        <div class="pagination">
+
+            {% if page_obj.has_previous %}
+                <a class="page-btn" href="?page={{ page_obj.previous_page_number }}">
+                    ← Previous
+                </a>
+            {% endif %}
+
+            <span class="page-info">
+                Page <strong>{{ page_obj.number }}</strong> of
+                <strong>{{ page_obj.paginator.num_pages }}</strong>
+            </span>
+
+            {% if page_obj.has_next %}
+                <a class="page-btn" href="?page={{ page_obj.next_page_number }}">
+                    Next →
+                </a>
+            {% endif %}
+
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -41,6 +41,11 @@ urlpatterns = [
     name="reply_comment",
 ),
 path(
+    "comment/<int:pk>/delete/",
+    views.delete_comment,
+    name="delete_comment",
+),
+path(
     "profile/<str:username>/posts/",
     views.profile_posts,
     name="profile_posts",

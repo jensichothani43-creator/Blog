@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.models import User
-from django.http import JsonResponse
+from django.http import Http404, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.core.paginator import Paginator
@@ -87,6 +87,10 @@ def post_detail(request, slug):
     slug=slug,
 )
 
+    # Only approved posts are public. Author can preview their own pending/rejected post.
+    if post.status != "approved" and post.author != request.user:
+        raise Http404("Post not found.")
+
     # Comments
     comments = (
     post.comments
@@ -169,7 +173,7 @@ def create_post(request):
             post.author = request.user
 
             # New posts wait for admin approval
-            post.status = "pending"    # ✅ સાચું
+            post.status = "pending"
 
             post.save()
 
@@ -212,12 +216,16 @@ def profile_posts(request, username):
         .order_by("-created_at")
     )
 
+    paginator = Paginator(posts, 9)
+    page_obj = paginator.get_page(request.GET.get("page"))
+
     return render(
         request,
         "blog/profile_posts.html",
         {
             "author": author,
-            "posts": posts,
+            "posts": page_obj,
+            "page_obj": page_obj,
         },
     )
 
@@ -240,12 +248,16 @@ def profile_likes(request, username):
         .order_by("-id")
     )
 
+    paginator = Paginator(likes, 9)
+    page_obj = paginator.get_page(request.GET.get("page"))
+
     return render(
         request,
         "blog/profile_likes.html",
         {
             "author": author,
-            "likes": likes,
+            "likes": page_obj,
+            "page_obj": page_obj,
         },
     )
 
@@ -268,12 +280,16 @@ def profile_comments(request, username):
         .order_by("-created_at")
     )
 
+    paginator = Paginator(comments, 9)
+    page_obj = paginator.get_page(request.GET.get("page"))
+
     return render(
         request,
         "blog/profile_comments.html",
         {
             "author": author,
-            "comments": comments,
+            "comments": page_obj,
+            "page_obj": page_obj,
         },
     )
 # ============================================================
@@ -292,8 +308,8 @@ def update_post(request, pk):
         pk=pk,
     )
 
-    # Author permission
-    if post.author != request.user:
+    # Author or staff permission
+    if post.author != request.user and not request.user.is_staff:
 
         messages.error(
             request,
@@ -355,8 +371,8 @@ def delete_post(request, pk):
         pk=pk,
     )
 
-    # Author permission
-    if post.author != request.user:
+    # Author or staff permission
+    if post.author != request.user and not request.user.is_staff:
 
         messages.error(
             request,
@@ -423,6 +439,44 @@ def reply_comment(request, pk):
         "post_detail",
         slug=parent_comment.post.slug,
     )
+
+# ============================================================
+# DELETE COMMENT
+# ============================================================
+
+@login_required
+def delete_comment(request, pk):
+    """
+    Delete a comment.
+    Only the comment's author or a staff member can delete it.
+    """
+
+    comment = get_object_or_404(
+        Comment,
+        pk=pk,
+    )
+
+    post_slug = comment.post.slug
+
+    if comment.author != request.user and not request.user.is_staff:
+
+        messages.error(
+            request,
+            "You cannot delete this comment.",
+        )
+
+        return redirect("post_detail", slug=post_slug)
+
+    if request.method == "POST":
+
+        comment.delete()
+
+        messages.success(
+            request,
+            "Comment deleted successfully.",
+        )
+
+    return redirect("post_detail", slug=post_slug)
 
 # ============================================================
 # LIKE / UNLIKE POST
