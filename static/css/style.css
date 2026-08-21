@@ -274,6 +274,119 @@ nav a:hover {
     z-index: 2;
 }
 
+/* =====================================================
+   HERO ENTRANCE ANIMATION (fade + drop from top)
+===================================================== */
+
+@keyframes heroFadeDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-28px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero-slide.active .hero-badge,
+.hero-slide.active .hero h1,
+.hero-slide.active .hero p,
+.hero-slide.active .hero-btn {
+    opacity: 0;
+    animation: heroFadeDown 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.hero-slide.active .hero-badge {
+    animation-delay: 0.05s;
+}
+
+.hero-slide.active .hero h1 {
+    animation-delay: 0.18s;
+}
+
+.hero-slide.active .hero p {
+    animation-delay: 0.32s;
+}
+
+.hero-slide.active .hero-btn {
+    animation-delay: 0.46s;
+}
+
+/* =====================================================
+   HERO FLOATING BLOG ICONS (decorative)
+===================================================== */
+
+.hero-float-icons {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.hero-float-icon {
+    position: absolute;
+    opacity: 0.16;
+    color: #ffffff;
+    animation: heroFloat 6s ease-in-out infinite;
+}
+
+.hero-float-icon:nth-child(1) {
+    top: 14%;
+    left: 62%;
+    font-size: 34px;
+    animation-duration: 7s;
+}
+
+.hero-float-icon:nth-child(2) {
+    top: 62%;
+    left: 78%;
+    font-size: 26px;
+    animation-duration: 5.5s;
+    animation-delay: 0.8s;
+}
+
+.hero-float-icon:nth-child(3) {
+    top: 30%;
+    left: 88%;
+    font-size: 20px;
+    animation-duration: 6.5s;
+    animation-delay: 1.4s;
+}
+
+.hero-float-icon:nth-child(4) {
+    top: 78%;
+    left: 58%;
+    font-size: 22px;
+    animation-duration: 8s;
+    animation-delay: 0.4s;
+}
+
+@keyframes heroFloat {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-16px) rotate(6deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-slide.active .hero-badge,
+    .hero-slide.active .hero h1,
+    .hero-slide.active .hero p,
+    .hero-slide.active .hero-btn {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+
+    .hero-float-icon {
+        animation: none;
+    }
+}
+
 .hero-badge {
     display: inline-block;
 
@@ -346,25 +459,39 @@ nav a:hover {
 ===================================================== */
 
 .hero-slide {
-    display: none;
+    position: absolute;
+    top: 70px;
+    left: 70px;
+    right: 70px;
 
     opacity: 0;
+    visibility: hidden;
 
-    transform: translateX(40px);
+    transform: translateY(14px);
 
     transition:
-        opacity 0.6s ease,
-        transform 0.6s ease;
+        opacity 0.9s ease,
+        transform 0.9s ease,
+        visibility 0s linear 0.9s;
 
-    width: 100%;
+    width: calc(100% - 140px);
 }
 
 .hero-slide.active {
-    display: block;
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
 
     opacity: 1;
+    visibility: visible;
 
-    transform: translateX(0);
+    transform: translateY(0);
+
+    transition:
+        opacity 0.9s ease,
+        transform 0.9s ease,
+        visibility 0s linear 0s;
 }
 
 /* ARROWS */
