@@ -6,6 +6,7 @@ Home - MyBlog
 
 {% block content %}
 
+{% if not selected_category and not query %}
 <!-- HERO SECTION (SLIDER) -->
 <section class="hero">
 
@@ -93,6 +94,7 @@ Home - MyBlog
     </div>
 
 </section>
+{% endif %}
 
 
 <!-- LATEST POSTS -->
@@ -315,6 +317,11 @@ Home - MyBlog
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const heroSection = document.querySelector(".hero");
+
+    if (!heroSection) {
+        return;
+    }
+
     const slides = document.querySelectorAll(".hero-slide");
     const dots = document.querySelectorAll(".hero-dot");
     const prevBtn = document.getElementById("heroPrev");
