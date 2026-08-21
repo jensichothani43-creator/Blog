@@ -179,6 +179,8 @@ nav a:hover {
     right: -120px;
     top: -120px;
 
+    z-index: 1;
+
     animation: floatCircle1 6s ease-in-out infinite;
 }
 
@@ -196,6 +198,8 @@ nav a:hover {
 
     right: 180px;
     bottom: -130px;
+
+    z-index: 1;
 
     animation: floatCircle2 7s ease-in-out infinite;
 }
@@ -220,10 +224,27 @@ nav a:hover {
 /* PER-SLIDE BACKGROUND COLORS */
 
 .hero {
-    transition: background 0.8s ease;
+    position: relative;
 }
 
-.hero.bg-slide-1 {
+.hero-bg-layer {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 1s ease;
+    background-size: 200% 200%;
+    border-radius: inherit;
+}
+
+.hero.bg-slide-1 .hero-bg-layer[data-bg="1"],
+.hero.bg-slide-2 .hero-bg-layer[data-bg="2"],
+.hero.bg-slide-3 .hero-bg-layer[data-bg="3"] {
+    opacity: 1;
+}
+
+.hero-bg-layer[data-bg="1"] {
     background:
         linear-gradient(
             135deg,
@@ -231,10 +252,9 @@ nav a:hover {
             #1f2937 50%,
             #374151 100%
         );
-    background-size: 200% 200%;
 }
 
-.hero.bg-slide-2 {
+.hero-bg-layer[data-bg="2"] {
     background:
         linear-gradient(
             135deg,
@@ -242,10 +262,9 @@ nav a:hover {
             #1e3a5f 50%,
             #2563eb 100%
         );
-    background-size: 200% 200%;
 }
 
-.hero.bg-slide-3 {
+.hero-bg-layer[data-bg="3"] {
     background:
         linear-gradient(
             135deg,
@@ -253,7 +272,6 @@ nav a:hover {
             #4c1d95 50%,
             #7e22ce 100%
         );
-    background-size: 200% 200%;
 }
 
 /* ZOOM PULSE ON SLIDE CHANGE */
