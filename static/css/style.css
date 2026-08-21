@@ -343,46 +343,33 @@ nav a:hover {
     z-index: 1;
 }
 
-.hero-float-icon {
+
+
+.hero-illustration {
     position: absolute;
-    opacity: 0.1;
-    color: #ffffff;
-    animation: heroFloat 6s ease-in-out infinite;
+    opacity: 0.5;
+    animation: heroFloat 7s ease-in-out infinite;
 }
 
-.hero-float-icon:nth-child(1) {
-    top: 14%;
-    left: 62%;
-    width: 34px;
-    height: 34px;
-    animation-duration: 7s;
+.hero-illustration-1 {
+    width: 130px;
+    bottom: -10px;
+    right: 8%;
+    animation-duration: 7.5s;
 }
 
-.hero-float-icon:nth-child(2) {
-    top: 62%;
-    left: 78%;
-    width: 26px;
-    height: 26px;
-    animation-duration: 5.5s;
-    animation-delay: 0.8s;
-}
-
-.hero-float-icon:nth-child(3) {
-    top: 30%;
-    left: 88%;
-    width: 22px;
-    height: 22px;
+.hero-illustration-2 {
+    width: 100px;
+    top: 8%;
+    right: 4%;
     animation-duration: 6.5s;
-    animation-delay: 1.4s;
+    animation-delay: 0.6s;
 }
 
-.hero-float-icon:nth-child(4) {
-    top: 78%;
-    left: 58%;
-    width: 24px;
-    height: 24px;
-    animation-duration: 8s;
-    animation-delay: 0.4s;
+@media (max-width: 900px) {
+    .hero-illustration {
+        display: none;
+    }
 }
 
 @keyframes heroFloat {
@@ -404,7 +391,7 @@ nav a:hover {
         transform: none;
     }
 
-    .hero-float-icon {
+    .hero-illustration {
         animation: none;
     }
 }
