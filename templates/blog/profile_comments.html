@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ author.username }} - Comments
+{% endblock %}
+
+{% block content %}
+
+<div class="profile-posts">
+
+    <h1>{{ author.username }}'s Comments</h1>
+
+    {% for comment in comments %}
+
+        <article class="post-card">
+
+            <p>
+                On:
+                <a href="{% url 'post_detail' comment.post.slug %}">
+                    {{ comment.post.title }}
+                </a>
+            </p>
+
+            <p>
+                {{ comment.content }}
+            </p>
+
+            <div class="post-meta">
+                {{ comment.created_at|date:"M d, Y" }}
+            </div>
+
+        </article>
+
+    {% empty %}
+
+        <div class="no-posts">
+            <h3>No comments yet.</h3>
+            <p>{{ author.username }} hasn't commented on any posts.</p>
+        </div>
+
+    {% endfor %}
+
+    {% if page_obj.paginator.num_pages > 1 %}
+        <div class="pagination">
+
+            {% if page_obj.has_previous %}
+                <a class="page-btn" href="?page={{ page_obj.previous_page_number }}">
+                    ← Previous
+                </a>
+            {% endif %}
+
+            <span class="page-info">
+                Page <strong>{{ page_obj.number }}</strong> of
+                <strong>{{ page_obj.paginator.num_pages }}</strong>
+            </span>
+
+            {% if page_obj.has_next %}
+                <a class="page-btn" href="?page={{ page_obj.next_page_number }}">
+                    Next →
+                </a>
+            {% endif %}
+
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}
