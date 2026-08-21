@@ -30,8 +30,8 @@ def home(request):
     selected_category = request.GET.get("category", "").strip()
 
     posts = (
-    Post.objects
-    .all()
+    Post.objects.all()
+    .filter(status="approved")
     .select_related("author", "category")
 )
 
@@ -169,7 +169,7 @@ def create_post(request):
             post.author = request.user
 
             # New posts wait for admin approval
-            post.status = "approved"
+            post.status = "pending"    # ✅ સાચું
 
             post.save()
 
